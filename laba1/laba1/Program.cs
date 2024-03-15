@@ -4,16 +4,23 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Введите размер блока:");
-            int blockSize = int.Parse(Console.ReadLine());
-            if (blockSize <= 0)
+            int blockSize = 0;
+            bool validInput = false;
+
+            while (!validInput)
             {
-                while (blockSize <= 0)
+                Console.WriteLine("Введите размер блока:");
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out blockSize) && blockSize > 0)
                 {
-                    Console.WriteLine("Неверное значение, введите другое:");
-                    blockSize = int.Parse(Console.ReadLine());
+                    validInput = true;
                 }
-            } 
+                else
+                {
+                    Console.WriteLine("Неверное значение, введите положительное целое число.");
+                }
+            }
 
             VirtualMemo virtualMemo = new VirtualMemo(blockSize);
 

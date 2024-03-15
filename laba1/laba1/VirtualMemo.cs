@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace laba1
 {
@@ -11,21 +9,22 @@ namespace laba1
     {
         string Name;
         int BlockSize;
-        int[] Arr; //значения
-        bool[] BMap; //битовая карта
-        int Index; //индекс на странице
-        int NumPage; //номер странице
+        int[] Arr; // Массив значений
+        bool[] BMap; // Битовая карта
+        int Index; // Индекс на странице
+        int NumPage; // Номер страницы
         int Pages;
 
+        // Конструктор
         public VirtualMemo(int BlockSize, string Name = "Def.dat")
         {
             this.BlockSize = BlockSize;
             this.Name = Name;
             BMap = new bool[BlockSize];
             Arr = new int[BlockSize];
-
         }
 
+        // Создание файла
         public void CreateFile()
         {
             int el;
@@ -53,7 +52,7 @@ namespace laba1
 
                     for (int i = 0; i < pages; i++)
                     {
-                        bw.Seek((sizeof(bool) * BMap.Count() + sizeof(int) * Arr.Count()) * (i), 0);
+                        bw.Seek((sizeof(bool) * BMap.Length + sizeof(int) * Arr.Length) * (i), 0);
 
                         Random rnd = new Random();
 
@@ -115,7 +114,7 @@ namespace laba1
             }
         }
 
-        //ввод индекса
+        // Ввод индекса
         private int Index_()
         {
             int index;
@@ -136,6 +135,7 @@ namespace laba1
             }
         }
 
+        // Чтение файла
         public void ReadIn()
         {
             int index = Index_();
@@ -152,14 +152,14 @@ namespace laba1
             }
             if (pageNum > Pages)
             {
-                NumPage = 1;//самая старая загруженная страница
+                NumPage = 1; // Самая первая загруженная страница
             }
             else NumPage = pageNum;
 
             using (BinaryReader reader = new BinaryReader(File.Open(Name, FileMode.Open)))
             {
                 // Считывание страницы в буферный массив
-                reader.Read(new byte[(sizeof(bool) * BMap.Count() + sizeof(int) * Arr.Count()) * (NumPage - 1)], 0, (sizeof(bool) * BMap.Count() + sizeof(int) * Arr.Count()) * (NumPage - 1));
+                reader.Read(new byte[(sizeof(bool) * BMap.Length + sizeof(int) * Arr.Length) * (NumPage - 1)], 0, (sizeof(bool) * BMap.Length + sizeof(int) * Arr.Length) * (NumPage - 1));
                 Console.WriteLine("Страница:" + NumPage);
                 Console.WriteLine("Индекс:" + Index);
                 for (int i = 0; i < BlockSize; i++)
@@ -172,8 +172,9 @@ namespace laba1
                     else reader.ReadInt32();
                 }
             }
-
         }
+
+        // Чтение по индексу
         public void ReadIndex()
         {
             ReadIn();
@@ -185,10 +186,10 @@ namespace laba1
             else
             {
                 Console.WriteLine("Ячейка пуста");
-
-
             }
         }
+
+        // Запись значения
         public void EnValue()
         {
             int el;
@@ -212,13 +213,15 @@ namespace laba1
             WriteFile();
         }
 
+        // Удаление значения
         public void Delete()
         {
             Arr[Index] = 0;
             BMap[Index] = false;
             WriteFile();
         }
-        
+
+        // Замена значения
         public void EnDel()
         {
             ReadIn();
@@ -241,16 +244,17 @@ namespace laba1
             }
             else
             {
-                Console.WriteLine("ячейка пустая");
+                Console.WriteLine("Ячейка пустая");
                 EnValue();
             }
         }
 
+        // Запись файла
         private void WriteFile()
         {
             using (BinaryWriter writer = new BinaryWriter(File.Open(Name, FileMode.OpenOrCreate)))
             {
-                writer.Seek((sizeof(bool) * BMap.Count() + sizeof(int) * Arr.Count()) * (NumPage - 1), 0);
+                writer.Seek((sizeof(bool) * BMap.Length + sizeof(int) * Arr.Length) * (NumPage - 1), 0);
 
                 for (int i = 0; i < BlockSize; i++)
                 {
@@ -264,5 +268,4 @@ namespace laba1
             }
         }
     }
-
 }

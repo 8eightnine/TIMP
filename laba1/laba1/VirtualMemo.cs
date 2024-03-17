@@ -10,9 +10,12 @@ namespace laba1
         string Name;
         int BlockSize;
         int[] Arr; // Массив значений
+        int[] ArrPast;
         bool[] BMap; // Битовая карта
+        bool[] BMapPast;
         int Index; // Индекс на странице
-        int NumPage; // Номер страницы
+        int NumPagePast = -1;
+        int NumPage = -1; // Номер страницы
         int Pages;
 
         // Конструктор
@@ -21,7 +24,9 @@ namespace laba1
             this.BlockSize = BlockSize;
             this.Name = Name;
             BMap = new bool[BlockSize];
+            BMapPast = new bool[BlockSize];
             Arr = new int[BlockSize];
+            ArrPast = new int[BlockSize];
         }
 
         // Создание файла
@@ -138,40 +143,67 @@ namespace laba1
         // Чтение файла
         public void ReadIn()
         {
-            int index = Index_();
-            int pageNum = 1;
-            if (index % BlockSize == 0)
+            int tempPage = NumPage;
+            int index = Index_(); // Предположим, что Index_() возвращает правильный индекс
+
+            int pageNum = (index / BlockSize) + 1;
+            Index = index % BlockSize;
+
+            if (pageNum > Pages)
+                NumPage = 1;
+            else
+                NumPage = pageNum;
+
+            if (NumPage == NumPagePast && NumPagePast != -1)
             {
-                pageNum = index / BlockSize + 1;
-                Index = 0;
+                // Обмен текущей и предыдущей страницей
+                SwapBuffers();
+                Console.WriteLine($"Страница №{NumPagePast} загружена из буфера.");
             }
             else
             {
-                pageNum = index / BlockSize + 1;
-                Index = index - (index / BlockSize) * BlockSize;
-            }
-            if (pageNum > Pages)
-            {
-                NumPage = 1; // Самая первая загруженная страница
-            }
-            else NumPage = pageNum;
+                // Сохранение предыдущей страницы перед загрузкой новой
+                SavePreviousPage();
 
-            using (BinaryReader reader = new BinaryReader(File.Open(Name, FileMode.Open)))
-            {
-                // Считывание страницы в буферный массив
-                reader.Read(new byte[(sizeof(bool) * BMap.Length + sizeof(int) * Arr.Length) * (NumPage - 1)], 0, (sizeof(bool) * BMap.Length + sizeof(int) * Arr.Length) * (NumPage - 1));
-                Console.WriteLine("Страница:" + NumPage);
-                Console.WriteLine("Индекс:" + Index);
-                for (int i = 0; i < BlockSize; i++)
-                    BMap[i] = reader.ReadBoolean();
-
-                for (int i = 0; i < BlockSize; i++)
+                using (BinaryReader reader = new BinaryReader(File.Open(Name, FileMode.Open)))
                 {
-                    if (BMap[i] == true)
-                        Arr[i] = reader.ReadInt32();
-                    else reader.ReadInt32();
+                    // Переход к началу нужной страницы в файле
+                    reader.BaseStream.Seek((NumPage - 1) * BlockSize, SeekOrigin.Begin);
+                    Console.WriteLine("Индекс " + Index);
+                    Console.WriteLine("Страница " + NumPage);
+                    Console.WriteLine("Предыдущая страница " + tempPage);
+                    // Чтение данных страницы
+                    for (int i = 0; i < BlockSize; i++)
+                        BMap[i] = reader.ReadBoolean();
+
+                    for (int i = 0; i < BlockSize; i++)
+                    {
+                        if (BMap[i])
+                            Arr[i] = reader.ReadInt32();
+                        else
+                            reader.ReadInt32(); // Пропустить данные, если флаг равен false
+                    }
                 }
             }
+            NumPagePast = tempPage;
+        }
+
+        private void SwapBuffers()
+        {
+            int[] tempArr = Arr;
+            bool[] tempBMap = BMap;
+
+            Arr = ArrPast;
+            BMap = BMapPast;
+
+            ArrPast = tempArr;
+            BMapPast = tempBMap;
+        }
+
+        private void SavePreviousPage()
+        {
+            ArrPast = (int[])Arr.Clone(); // Копирование массива
+            BMapPast = (bool[])BMap.Clone(); // Копирование массива
         }
 
         // Чтение по индексу

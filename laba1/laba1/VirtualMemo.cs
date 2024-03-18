@@ -17,12 +17,21 @@ namespace laba1
         int NumPagePast = -1;
         int NumPage = -1; // Номер страницы
         int Pages;
+        private int BufferSize;
+        private int[][] ArrBuffers;
+        private bool[][] BMapBuffers;
+        private int[] NumPageBuffers;
+        private int bufferIndex = 0; // Индекс текущего буфера в кольцевом буфере
 
         // Конструктор
-        public VirtualMemo(int BlockSize, string Name = "Def.dat")
+        public VirtualMemo(int BlockSize, int BufferSize, string Name = "Def.dat")
         {
             this.BlockSize = BlockSize;
             this.Name = Name;
+            this.BufferSize = BufferSize;
+            ArrBuffers = new int[BufferSize][];
+            BMapBuffers = new bool[BufferSize][];
+            NumPageBuffers = new int[BufferSize];
             BMap = new bool[BlockSize];
             BMapPast = new bool[BlockSize];
             Arr = new int[BlockSize];
@@ -141,6 +150,23 @@ namespace laba1
         }
 
         // Чтение файла
+        //private const int BufferSize = bufferSize; // Фиксированный размер буфера
+
+        //private int[][] ArrBuffers = new int[BufferSize][]; // Массив буферов массивов Arr
+        //private bool[][] BMapBuffers = new bool[BufferSize][]; // Массив буферов массивов BMap
+        //private int[] NumPageBuffers = new int[BufferSize]; // Массив номеров страниц в буфере
+        //private int bufferIndex = 0; // Индекс текущего буфера в кольцевом буфере
+
+        public void InitializeBuffers()
+        {
+            for (int i = 0; i < BufferSize; i++)
+            {
+                ArrBuffers[i] = new int[BlockSize];
+                BMapBuffers[i] = new bool[BlockSize];
+                NumPageBuffers[i] = -1; // Или другое подходящее значение по умолчанию
+            }
+        }
+
         public void ReadIn()
         {
             int tempPage = NumPage;
@@ -154,24 +180,32 @@ namespace laba1
             else
                 NumPage = pageNum;
 
-            if (NumPage == NumPagePast && NumPagePast != -1)
+            int bufferIndex = GetBufferIndex(NumPage);
+            if (bufferIndex != -1)
             {
-                // Обмен текущей и предыдущей страницей
-                SwapBuffers();
-                Console.WriteLine($"Страница №{NumPagePast} загружена из буфера.");
+                // Скопировать данные из буфера
+                Array.Copy(ArrBuffers[bufferIndex], Arr, ArrBuffers[bufferIndex].Length);
+                Array.Copy(BMapBuffers[bufferIndex], BMap, BMapBuffers[bufferIndex].Length);
+                Console.WriteLine($"Страница №{NumPage} загружена из буфера.");
             }
             else
             {
-                // Сохранение предыдущей страницы перед загрузкой новой
-                SavePreviousPage();
-
                 using (BinaryReader reader = new BinaryReader(File.Open(Name, FileMode.Open)))
                 {
                     // Переход к началу нужной страницы в файле
                     reader.BaseStream.Seek((NumPage - 1) * BlockSize, SeekOrigin.Begin);
-                    Console.WriteLine("Индекс " + Index);
-                    Console.WriteLine("Страница " + NumPage);
-                    Console.WriteLine("Предыдущая страница " + tempPage);
+                    Console.WriteLine("Страница: " + NumPage);
+                    Console.Write("Страницы в буфере: ");
+                    foreach (var page in NumPageBuffers)
+                    {
+                        if (page != 0)
+                        {
+                            Console.Write(page + " ");
+                        }
+                    }
+                    Console.WriteLine("");
+                    Console.WriteLine("Кол-во буфера: " + NumPageBuffers.Length);
+
                     // Чтение данных страницы
                     for (int i = 0; i < BlockSize; i++)
                         BMap[i] = reader.ReadBoolean();
@@ -184,26 +218,33 @@ namespace laba1
                             reader.ReadInt32(); // Пропустить данные, если флаг равен false
                     }
                 }
+
+                // Сохранить страницу в буфер, только если она не была прочитана из буфера
+                SaveInBuffer();
             }
+
             NumPagePast = tempPage;
         }
 
-        private void SwapBuffers()
+        private int GetBufferIndex(int pageNum)
         {
-            int[] tempArr = Arr;
-            bool[] tempBMap = BMap;
-
-            Arr = ArrPast;
-            BMap = BMapPast;
-
-            ArrPast = tempArr;
-            BMapPast = tempBMap;
+            for (int i = 0; i < BufferSize; i++)
+            {
+                if (NumPageBuffers[i] == pageNum)
+                    return i;
+            }
+            return -1;
         }
 
-        private void SavePreviousPage()
+        private void SaveInBuffer()
         {
-            ArrPast = (int[])Arr.Clone(); // Копирование массива
-            BMapPast = (bool[])BMap.Clone(); // Копирование массива
+            // Сохранить текущую страницу в буфер
+            ArrBuffers[bufferIndex] = (int[])Arr.Clone();
+            BMapBuffers[bufferIndex] = (bool[])BMap.Clone();
+            NumPageBuffers[bufferIndex] = NumPage;
+
+            // Обновить индекс буфера
+            bufferIndex = (bufferIndex + 1) % BufferSize;
         }
 
         // Чтение по индексу

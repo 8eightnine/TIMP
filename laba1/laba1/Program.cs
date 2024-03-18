@@ -5,7 +5,9 @@
         static void Main(string[] args)
         {
             int blockSize = 0;
+            int bufferSize = 0;
             bool validInput = false;
+            bool validInput2 = false;
 
             while (!validInput)
             {
@@ -22,7 +24,22 @@
                 }
             }
 
-            VirtualMemo virtualMemo = new VirtualMemo(blockSize);
+            while (!validInput2)
+            {
+                Console.WriteLine("Введите размер буфера (от 3 до 512):");
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out bufferSize) && bufferSize >= 3 && bufferSize <= 512)
+                {
+                    validInput2 = true;
+                }
+                else
+                {
+                    Console.WriteLine("Неверное значение, введите положительное целое число от 3 до 512.");
+                }
+            }
+
+            VirtualMemo virtualMemo = new VirtualMemo(blockSize, bufferSize);
 
             while (true)
             {
@@ -48,6 +65,7 @@
                     case 0:
                         return;
                     case 1:
+
                         virtualMemo.CreateFile();
                         break;
 

@@ -75,7 +75,8 @@ namespace laba2
             if (File.Exists(fileName))
             {
                 string[] lines = File.ReadAllLines(fileName);
-                ToolStripMenuItem parentMenuItem = null;
+                Dictionary<int, List<ToolStripMenuItem>> menuItemsByLevel = new Dictionary<int, List<ToolStripMenuItem>>();
+
                 foreach (string line in lines)
                 {
                     string[] parts = line.Split(' ');
@@ -105,33 +106,38 @@ namespace laba2
                             status = Int32.Parse(userRoles[title]);
                         }
 
+                        ToolStripMenuItem menuItem = new ToolStripMenuItem(title, null, MenuItem_Click);
+                        menuItem.Tag = methodName;
+
+                        if (status == 2)
+                        {
+                            menuItem.Visible = false;
+                        }
+                        else if (status == 1)
+                        {
+                            menuItem.Enabled = false;
+                        }
+
+                        if (!menuItemsByLevel.ContainsKey(level))
+                        {
+                            menuItemsByLevel[level] = new List<ToolStripMenuItem>();
+                        }
+                        menuItemsByLevel[level].Add(menuItem);
+
                         if (level == 0)
                         {
-                            parentMenuItem = new ToolStripMenuItem(title);
-                            menuStrip.Items.Add(parentMenuItem);
-                            if (status == 2)
-                            {
-                                parentMenuItem.Visible = false;
-                            }
-                            if (status == 1)
-                            {
-                                parentMenuItem.Enabled = true;
-                            }
+                            menuStrip.Items.Add(menuItem);
                         }
                         else
                         {
-                            ToolStripMenuItem menuItem = new ToolStripMenuItem(title, null, MenuItem_Click);
-                            menuItem.Tag = methodName;
-
-                            if (status == 2)
+                            int parentLevel = level - 1;
+                            if (menuItemsByLevel.ContainsKey(parentLevel))
                             {
-                                menuItem.Visible = false;
+                                foreach (var parentMenuItem in menuItemsByLevel[parentLevel])
+                                {
+                                    parentMenuItem.DropDownItems.Add(menuItem);
+                                }
                             }
-                            else if (status == 1)
-                                menuItem.Enabled = false;
-
-                            if (parentMenuItem != null)
-                                parentMenuItem.DropDownItems.Add(menuItem);
                         }
                     }
                 }
@@ -165,10 +171,6 @@ namespace laba2
             if (!string.IsNullOrEmpty(methodName))
             {
                 InvokeMethodByName(methodName);
-            }
-            else
-            {
-                MessageBox.Show("Подпункты.");
             }
         }
 

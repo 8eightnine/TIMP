@@ -3,7 +3,7 @@ using ConsoleApp1;
 namespace ShadowTestProject
 {
     [TestClass]
-    public class ShadowTests
+    public class BlackBoxShadowTests
     {
         [TestMethod]
         public void TestIfLengthEqualsZero()
@@ -100,7 +100,7 @@ namespace ShadowTestProject
     }
 
     [TestClass]
-    public class WhiteBoxTests
+    public class WhiteBoxShadowTests
     {
         [TestMethod]
         public void TestIfNoLinesAdded()

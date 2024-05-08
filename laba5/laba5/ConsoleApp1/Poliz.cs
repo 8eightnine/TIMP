@@ -2,7 +2,7 @@
 
 public class POLIZ
 {
-    public static string ConvertToRPN(string expression)
+    public string ConvertToRPN(string expression)
     {
         List<string> outputList = new List<string>();
         Stack<string> stack = new Stack<string>();
@@ -58,7 +58,7 @@ public class POLIZ
         return string.Join(" ", outputList);
     }
 
-    static int Priority(string c)
+    public int Priority(string c)
     {
         if (c == "(")
         {

@@ -3,7 +3,7 @@ using ConsoleApp1;
 namespace ShadowTestProject
 {
     [TestClass]
-    public class BlackBoxTests
+    public class ShadowTests
     {
         [TestMethod]
         public void TestIfLengthEqualsZero()

@@ -2,117 +2,69 @@
 
 namespace ConsoleApp1
 {
-    public class ShadowCalc
-    {
-        static void Main(string[] args)
-        {
-
-            Shadow();
-
-        }
-
-        public static void Shadow()
-        {
-            OX ox = new OX();
-            Console.WriteLine("Введите кол-во линий");
-            try
-            {
-                int number = Convert.ToInt32(Console.ReadLine());
-
-                for (int i = 0; i < number; i++)
-                {
-                    Console.WriteLine("Начало отрезка :" + i);
-                    int start = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Конец отрезка :" + i);
-                    int end = Convert.ToInt32(Console.ReadLine());
-                    if (start <= end)
-                    {
-                        Line line = new Line(start, end);
-                        ox.lines.Add(line);
-                    }
-                    else
-                    {
-                        Line line = new Line(end, start);
-                        ox.lines.Add(line);
-                    }
-                }
-            }
-            catch (FormatException e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine("Введите количество линий!!!!");
-                Shadow();
-            }
-            Value value = new Value(ox);
-            Console.WriteLine("Результат: " + value.shadow_lenght());
-        }
-
-
-    }
-    public class Value
-    {
-        public OX ox;
-        public Value(OX ox)
-        {
-            this.ox = ox;
-        }
-        public int shadow_lenght()
-        {
-            int sum = 0;
-            for (int i = 0; i < ox.lines.Count; i++)
-            {
-                for (int j = 0; j < ox.lines.Count; j++)
-                {
-                    if (i == j) continue;
-                    if (ox.lines[i].start >= ox.lines[j].start && ox.lines[i].end <= ox.lines[j].end) //линия i входит в линию j
-                    {
-                        ox.lines[i].start = 0;
-                        ox.lines[i].end = 0;
-                    }
-                    if (ox.lines[j].start >= ox.lines[i].start && ox.lines[j].end <= ox.lines[i].end) //линия j входит в линию i
-                    {
-                        ox.lines[j].start = 0;
-                        ox.lines[j].end = 0;
-                    }
-                    if (ox.lines[i].start > ox.lines[j].start && ox.lines[i].start < ox.lines[j].end && ox.lines[j].end < ox.lines[i].end) //линия i начинается в линии j но заканчивается не в линии j
-                    {
-                        ox.lines[i].start = ox.lines[j].end;
-
-                    }
-                    if (ox.lines[i].start < ox.lines[j].start && ox.lines[i].start < ox.lines[j].end && ox.lines[i].end < ox.lines[j].end && ox.lines[i].end > ox.lines[j].end) //линия i не начинается в линии j но заканчивается в линии j
-                    {
-                        ox.lines[i].end = ox.lines[j].start;
-                    }
-                }
-            }
-            for (int i = 0; i < ox.lines.Count; i++) //подсчёт суммы длин
-            {
-                sum += ox.lines[i].end - ox.lines[i].start;
-            }
-            return sum;
-        }
-
-    }
-    public class OX
-    {
-        public List<Line> lines = new List<Line>();
-    }
     public class Line
     {
-        public int start, end;
-
-        public Line(int start, int end)
+        public int X1 { get; set; }
+        public int X2 { get; set; }
+        public Line(int x1, int x2)
         {
-            this.start = start;
-            this.end = end;
+            X1 = x1;
+            X2 = x2;
         }
-        public bool check()
+    }
+    public class Shadow
+    {
+        List<Line> lines;
+        public List<Line> Lines { get { return lines; } }
+
+        public Shadow()
         {
-            if (start > -501 && start < 501 && end > -501 && end < 501)
+            lines = new List<Line>();
+        }
+
+        public void AddLine(int x1, int x2)
+        {
+            Line newLine;
+
+            if (x1 < x2)//проверяем,  чтобы первая координата была меньше второй
+                newLine = new Line(x1, x2);
+            else
+                newLine = new Line(x2, x1);
+
+            for (int i = 0; i < lines.Count; i++) //упорядочиваем отрезки по первой координате
+                if (lines[i].X1 > x1)
+                {
+                    lines.Insert(i, newLine);   //вставляем отрезок в список 
+                    return;                     //выходим из метода
+                }
+            lines.Add(newLine);             //добавляем отрезок в конец списка
+        }
+
+        public int GetSum()
+        {
+            if (lines.Count == 0) return 0; //если отрезков нет
+
+            int index = 0; //номер текщего отрезка
+            int start = 0; //начало суммы текущих подряд идущих отрезков
+            int end = 0;   //конец суммы текущих подряд идущих отрезков
+
+            int sum = 0;
+
+            while (index <= lines.Count)//перебираем все отрезки
             {
-                return true;
+                //если это последняя линия
+                // или – разрыв между отрезками
+                if (index == lines.Count || lines[end].X2 < lines[index].X1)
+                {
+                    sum += Math.Abs(lines[end].X2 - lines[start].X1);
+                    start = index;
+                    end = index;
+                }
+                else if (lines[end].X2 < lines[index].X2) end = index; //если окончание текущего отрезка дальше  окончания
+                index++; //текущей суммы отрезков, значит у нас новое окончание суммы отрезков
             }
-            else return false;
+
+            return sum;
         }
     }
 }

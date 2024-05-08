@@ -8,13 +8,16 @@ namespace ConsoleApp1
 {
     internal class Program
     {
-        static void Main2(string[] args)
+        static void Main(string[] args)
         {
 
-            Console.WriteLine("Введите арифметическое выражение:");
-            string expression = Console.ReadLine();
-            var result = POLIZ.ConvertToRPN(expression);
-            Console.WriteLine("Результат в обратной польской записи: " + result);
+            ////Console.WriteLine("Введите арифметическое выражение:");
+            ////string expression = Console.ReadLine();
+            ////var result = POLIZ.ConvertToRPN(expression);
+            ////Console.WriteLine("Результат в обратной польской записи: " + result);
+            Shadow shadow = new Shadow();
+            shadow.AddLine(0, 10);
+            Console.WriteLine(shadow.GetSum());
         }
     }
 }

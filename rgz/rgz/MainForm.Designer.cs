@@ -1,6 +1,6 @@
 ﻿namespace rgz
 {
-    partial class Form1
+    partial class MainForm
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -28,6 +28,7 @@
             this.labelTimer = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label4 = new System.Windows.Forms.Label();
+            this.buttonCompareSorts = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // comboBoxSortType
@@ -138,11 +139,22 @@
             this.label4.TabIndex = 10;
             this.label4.Text = "Время:";
             // 
+            // buttonCompareSorts
+            // 
+            this.buttonCompareSorts.Location = new System.Drawing.Point(826, 7);
+            this.buttonCompareSorts.Name = "buttonCompareSorts";
+            this.buttonCompareSorts.Size = new System.Drawing.Size(207, 23);
+            this.buttonCompareSorts.TabIndex = 11;
+            this.buttonCompareSorts.Text = "Сравнить виды соритровок";
+            this.buttonCompareSorts.UseVisualStyleBackColor = true;
+            this.buttonCompareSorts.Click += new System.EventHandler(this.buttonCompareSorts_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1045, 567);
+            this.Controls.Add(this.buttonCompareSorts);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.labelTimer);
             this.Controls.Add(this.labelIterCnt);
@@ -154,9 +166,11 @@
             this.Controls.Add(this.panelVisualize);
             this.Controls.Add(this.buttonSort);
             this.Controls.Add(this.comboBoxSortType);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Sort Visualizer";
+            this.Text = "Визуализатор сортировок";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -175,6 +189,7 @@
         private System.Windows.Forms.Label labelTimer;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button buttonCompareSorts;
     }
 }
 

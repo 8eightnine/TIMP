@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace rgz
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private int[] dataArray;
         private int arraySize;
@@ -19,7 +19,7 @@ namespace rgz
         private int iterCount = 0;
         Stopwatch sw;
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             InitUI();
@@ -247,6 +247,13 @@ namespace rgz
         private void timer1_Tick(object sender, EventArgs e)
         {
             labelTimer.Text = sw.Elapsed.Seconds.ToString() + " с";
+        }
+
+        private void buttonCompareSorts_Click(object sender, EventArgs e)
+        {
+            CompareForm compareForm = new CompareForm();
+            compareForm.Show();
+            this.Hide();
         }
     }
 }

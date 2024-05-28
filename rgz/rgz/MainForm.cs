@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -25,6 +20,7 @@ namespace rgz
             InitUI();
         }
 
+        // Инициализация интерфейса пользователя
         private void InitUI()
         {
             comboBoxSortType.Items.AddRange(new string[]
@@ -36,46 +32,53 @@ namespace rgz
             });
             comboBoxSortType.SelectedIndex = 0;
 
-            comboBoxSortType.SelectedIndexChanged += ComboBoxSortType_SelectedIndexChanged;
-
             buttonSort.Click += ButtonSort_Click;
-
-            // Создаем массив данных, но не заполняем его
-            //dataArray = new int[Int32.Parse(textBoxArrElCnt.Text)];
 
             // Подписываемся на событие загрузки формы
             this.Load += Form1_Load;
         }
 
+        // Обработчик события загрузки формы
         private void Form1_Load(object sender, EventArgs e)
         {
             // Генерируем массив данных после загрузки формы
             GenerateRandomArray();
         }
 
-        private void ComboBoxSortType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //GenerateRandomArray();
-        }
-
+        // Генерация случайного массива данных
         private void GenerateRandomArray()
         {
-            arraySize = Int32.Parse(textBoxArrElCnt.Text);
-            dataArray = new int[arraySize];
-
-            if (panelVisualize == null)
+            if (Int32.TryParse(textBoxArrElCnt.Text, out int arrSize))
             {
-                return; // панель еще не инициализирована
-            }
+                if (arrSize <= 150 && arrSize >= 5)
+                {
+                    arraySize = Int32.Parse(textBoxArrElCnt.Text);
+                    dataArray = new int[arraySize];
 
-            Random rand = new Random();
-            for (int i = 0; i < arraySize; i++)
-            {
-                dataArray[i] = rand.Next(5, panelVisualize.Height);
+                    if (panelVisualize == null)
+                    {
+                        return; // панель еще не инициализирована
+                    }
+
+                    Random rand = new Random();
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        dataArray[i] = rand.Next(5, panelVisualize.Height);
+                    }
+                    panelVisualize.Invalidate();
+                }
+                else
+                {
+                    MessageBox.Show("Массив должен иметь размер от 5 до 150!");
+                }
             }
-            panelVisualize.Invalidate();
+            else
+            {
+                MessageBox.Show("Размером массива должно быть число!");
+            }
         }
 
+        // Обработчик события нажатия кнопки "Сортировать"
         private async void ButtonSort_Click(object sender, EventArgs e)
         {
             iterCount = 0;
@@ -107,6 +110,7 @@ namespace rgz
             sw.Stop();
         }
 
+        // Метод сортировки вставками
         private async Task InsertionSort()
         {
             for (int i = 1; i < dataArray.Length; i++)
@@ -128,6 +132,7 @@ namespace rgz
             }
         }
 
+        // Метод сортировки пузырьком
         private async Task BubbleSort()
         {
             for (int i = 0; i < dataArray.Length - 1; i++)
@@ -148,6 +153,7 @@ namespace rgz
             }
         }
 
+        // Метод сортировки выбором
         private async Task SelectionSort()
         {
             for (int i = 0; i < dataArray.Length - 1; i++)
@@ -170,6 +176,7 @@ namespace rgz
             }
         }
 
+        // Метод сортировки слиянием
         private async Task MergeSort(int left, int right)
         {
             iterCount++;
@@ -183,6 +190,7 @@ namespace rgz
             }
         }
 
+        // Метод слияния массивов для сортировки слиянием
         private async Task Merge(int left, int middle, int right)
         {
             int leftArraySize = middle - left + 1;
@@ -225,6 +233,7 @@ namespace rgz
             }
         }
 
+        // Обработчик события рисования панели визуализации
         private void panelVisualize_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -234,21 +243,40 @@ namespace rgz
             }
         }
 
+        // Обработчик события нажатия кнопки "Регенерировать массив"
         private void buttonRegenArr_Click(object sender, EventArgs e)
         {
-            GenerateRandomArray();
+            if (Int32.TryParse(textBoxArrElCnt.Text, out int arrSize))
+            {
+                if (arrSize <= 150 && arrSize >= 5)
+                {
+                    arraySize = Int32.Parse(textBoxArrElCnt.Text);
+                    GenerateRandomArray();
+                }
+                else
+                {
+                    MessageBox.Show("Массив должен иметь размер от 5 до 150!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Размером массива должно быть число!");
+            }
         }
 
+        // Обработчик события изменения значения в выпадающем списке
         private void comboBoxSortType_SelectedValueChanged(object sender, EventArgs e)
         {
             GenerateRandomArray();
         }
 
+        // Обработчик события тика таймера
         private void timer1_Tick(object sender, EventArgs e)
         {
             labelTimer.Text = sw.Elapsed.Seconds.ToString() + " с";
         }
 
+        // Обработчик события нажатия кнопки "Сравнить сортировки"
         private void buttonCompareSorts_Click(object sender, EventArgs e)
         {
             CompareForm compareForm = new CompareForm();

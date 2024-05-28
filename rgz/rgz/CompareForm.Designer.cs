@@ -31,9 +31,13 @@
             this.components = new System.ComponentModel.Container();
             this.buttonShowSorts = new System.Windows.Forms.Button();
             this.panelInsertion = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelBubble = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
             this.panelSelection = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
             this.panelMerge = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
             this.labelInsIter = new System.Windows.Forms.Label();
             this.labelBubIter = new System.Windows.Forms.Label();
             this.labelSelIter = new System.Windows.Forms.Label();
@@ -42,14 +46,12 @@
             this.labelBubTimer = new System.Windows.Forms.Label();
             this.labelSelTimer = new System.Windows.Forms.Label();
             this.labelMergeTimer = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.timerIns = new System.Windows.Forms.Timer(this.components);
             this.timerBub = new System.Windows.Forms.Timer(this.components);
             this.timerSel = new System.Windows.Forms.Timer(this.components);
             this.timerMer = new System.Windows.Forms.Timer(this.components);
+            this.textBoxArrSize = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.panelInsertion.SuspendLayout();
             this.panelBubble.SuspendLayout();
             this.panelSelection.SuspendLayout();
@@ -75,6 +77,15 @@
             this.panelInsertion.TabIndex = 5;
             this.panelInsertion.Paint += new System.Windows.Forms.PaintEventHandler(this.panelInsertion_Paint);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(222, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(69, 16);
+            this.label1.TabIndex = 16;
+            this.label1.Text = "Вставкой";
+            // 
             // panelBubble
             // 
             this.panelBubble.Controls.Add(this.label2);
@@ -83,6 +94,15 @@
             this.panelBubble.Size = new System.Drawing.Size(294, 177);
             this.panelBubble.TabIndex = 6;
             this.panelBubble.Paint += new System.Windows.Forms.PaintEventHandler(this.panelBubble_Paint);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(210, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(81, 16);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Пузырьком";
             // 
             // panelSelection
             // 
@@ -93,6 +113,15 @@
             this.panelSelection.TabIndex = 7;
             this.panelSelection.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSelection_Paint);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(222, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(66, 16);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "Выбором";
+            // 
             // panelMerge
             // 
             this.panelMerge.Controls.Add(this.label4);
@@ -101,6 +130,15 @@
             this.panelMerge.Size = new System.Drawing.Size(294, 177);
             this.panelMerge.TabIndex = 8;
             this.panelMerge.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMerge_Paint);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(219, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(72, 16);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Слиянием";
             // 
             // labelInsIter
             // 
@@ -174,42 +212,6 @@
             this.labelMergeTimer.TabIndex = 15;
             this.labelMergeTimer.Text = "Время: 0 с";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 16);
-            this.label1.TabIndex = 16;
-            this.label1.Text = "Вставкой";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 16);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "Пузырьком";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 16);
-            this.label3.TabIndex = 18;
-            this.label3.Text = "Выбором";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(72, 16);
-            this.label4.TabIndex = 19;
-            this.label4.Text = "Слиянием";
-            // 
             // timerIns
             // 
             this.timerIns.Tick += new System.EventHandler(this.timerIns_Tick);
@@ -226,11 +228,30 @@
             // 
             this.timerMer.Tick += new System.EventHandler(this.timerMer_Tick);
             // 
+            // textBoxArrSize
+            // 
+            this.textBoxArrSize.Location = new System.Drawing.Point(116, 10);
+            this.textBoxArrSize.Name = "textBoxArrSize";
+            this.textBoxArrSize.Size = new System.Drawing.Size(39, 22);
+            this.textBoxArrSize.TabIndex = 16;
+            this.textBoxArrSize.Text = "25";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(161, 13);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(115, 16);
+            this.label5.TabIndex = 17;
+            this.label5.Text = "Размер массива";
+            // 
             // CompareForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(620, 513);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.textBoxArrSize);
             this.Controls.Add(this.labelMergeTimer);
             this.Controls.Add(this.labelSelTimer);
             this.Controls.Add(this.labelBubTimer);
@@ -283,5 +304,7 @@
         private System.Windows.Forms.Timer timerBub;
         private System.Windows.Forms.Timer timerSel;
         private System.Windows.Forms.Timer timerMer;
+        private System.Windows.Forms.TextBox textBoxArrSize;
+        private System.Windows.Forms.Label label5;
     }
 }

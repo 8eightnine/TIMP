@@ -39,7 +39,7 @@
             this.comboBoxSortType.Name = "comboBoxSortType";
             this.comboBoxSortType.Size = new System.Drawing.Size(160, 24);
             this.comboBoxSortType.TabIndex = 0;
-            this.comboBoxSortType.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSortType_SelectedIndexChanged);
+ 
             this.comboBoxSortType.SelectedValueChanged += new System.EventHandler(this.comboBoxSortType_SelectedValueChanged);
             // 
             // buttonSort
@@ -149,7 +149,7 @@
             this.buttonCompareSorts.UseVisualStyleBackColor = true;
             this.buttonCompareSorts.Click += new System.EventHandler(this.buttonCompareSorts_Click);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -169,7 +169,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Визуализатор сортировок";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
